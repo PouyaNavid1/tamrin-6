@@ -28,7 +28,8 @@ public class Server {
         this.clientHandlers = new ArrayList<>();
         status = ServerStatus.WAITING;
     }
-    public void init() {
+    public void init() throws InterruptedException {
+        game = new Game(numberOfPlayers, clientHandlers.size(), clientHandlers, this);
         System.out.println("Server is running...");
         try {
             ServerSocket serverSocket = new ServerSocket(8000);

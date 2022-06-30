@@ -29,14 +29,11 @@ public class Game {
         if (isSmaller)
             heart --;
     }
-    public void play(Player player, int current) throws InterruptedException {
+    public synchronized void play(Player player, int current) throws InterruptedException {
 
         check(current);
-        for (Player p : players)
-            p.interrupt();
+
         topCard = current;
-        for (Player p : players)
-            p.start();
         server.sendToAll(print());
         if (isEnd()) {
             server.sendToAll(print());
@@ -44,11 +41,15 @@ public class Game {
     }
     public void play(ClientHandler clientHandler, int current) throws InterruptedException {
         check(current);
+        topCard = current;
+        /*
         for (Player p : players)
             p.interrupt();
         topCard = current;
         for (Player p : players)
             p.start();
+
+         */
         server.sendToAll(print());
         if (isEnd()) {
             server.sendToAll(print());
@@ -121,7 +122,7 @@ public class Game {
         players = new ArrayList<>();
         this.clientHandlers = clientHandlers;
         for (int i = 0; i < numbers - numberOfClient; i ++)
-            players.add(new Player(i, i * 100 + 200 , this));
+            players.add(new Player(i, i * 10 + 20 , this));
         this.cards = new ArrayList<>();
         for (int i = 1; i <= 100; i ++)
             cards.add(i);
@@ -176,6 +177,7 @@ public class Game {
         for (int i = 0; i < turn; i ++)
             for (ClientHandler clientHandler : clientHandlers)
                 clientHandler.addCard(cards.get(id++));
+        server.sendToAll(print());
 
     }
     public void ninga() throws InterruptedException {

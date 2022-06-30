@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Player extends Thread {
+public class Player implements Runnable {
     TreeSet<Integer> cards = new TreeSet<>();
     private int id, speed;
     Game game;
@@ -18,7 +18,7 @@ public class Player extends Thread {
         this.cards = new TreeSet<>();
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 
@@ -47,14 +47,26 @@ public class Player extends Thread {
         int min = 0;
         int current = 0;
         if (cards.size() > 0) current = this.cards.first();
+        System.out.println("current : " + current);
+        if (game.isEnd()) {
+            System.out.println("turn : " + game.turn);
+            try {
+                game.nextRound();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             if (current > 0 && current > top) {
                 Thread.sleep(speed * (current - top));
                 cards.remove(current);
                 game.play(this, current);
             }else {
-                if (game.isEnd())
+                if (game.isEnd()) {
+                    System.out.println("turn : " + game.turn);
                     game.nextRound();
+                }
+
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

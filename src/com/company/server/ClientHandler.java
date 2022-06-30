@@ -91,7 +91,10 @@ public class ClientHandler implements Runnable{
         out.flush();
     }
     public void go() throws InterruptedException {
-        cards.remove(getFirst());
-        game.play(this, getFirst());
+        System.out.println("l : " + game.ninga);
+        if (getSize() > 0) {
+            cards.remove(getFirst());
+            game.play(this, getFirst());
+        }
     }
 }
